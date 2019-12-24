@@ -3,21 +3,114 @@
 	TD v0.01
 </title>
 
-	<h1><p align = "center">Tower Defense</p></h1><br>
+	<h1><p align = "center">Tower Defense</p></h1>
 	
-	<div onmousedown="Start(event)">
-		<img id="Title" src="Title-x.jpg"><br>
+	<div >
+		<img id="Title" src="Title-x.jpg" onmousedown="Start(event)">
 	</div>
 
-	<script> //Title
-	function Start(event) {
-  	x = -1;
-  	TitleX;
-  	Title.style = "display:none"
+	<div style="position:relative; z-index:3;">
+	<img id="MainMenu" src="Main-0.jpg" style="display: none;"> 
+	</div>
+	<div style="position:relative; top:-172; left:983; z-index:4" >
+	<img id="Testmode" src="MMButton-TM.jpg" style="display: none;" onmousedown="TMStart(event)">
+	</div>
+	<div style="position:relative; z-index:5;">
+	<img id="Maptest" src="TestMap.jpg" style="display: none;">
+	</div>
+	<div style="position:relative; z-index:6; top:-100">
+		<img id="SpawnTower" src="SpawnTower.jpg" style="display: none;" onmousedown="Bunker(event)">
+		<img id="SpawnEnemy" src="SpawnEnemy.jpg" style="display: none;" onmousedown="EnemyAtt(event)">
+	</div>
+	<div id='Div22' style="position:relative; z-index:6;top:-625;left:600">
+		<img id="Tower" src="Bunker-1.jpg" style="display: none;">
+	</div>
+	<div style="position:relative; z-index:6;top:-620;left: 1250">
+		<img id="Enemy" src="Enemy.jpg" style="display: none;">
+	</div>
+	<div id="ShotID" style="position:relative; z-index:6;">
+		<img id="Shot" src="Bullet.jpg" style="display: none;">
+	</div>
+
+	<script>
+	function Start(event){ //Переход со стартового экрана в главное меню
+  		x = -1;
+  		TitleX;
+  		Title.style = "display:none";
+  		MainID;
+  		MainMenu.style = "display:yes";
+  		MMBTM;
+  		Testmode.style = "display:yes";
+		}
+
+	function TMStart(event){ //Переход с главного меню в тестовый уровень
+		MainID;
+  		MainMenu.style = "display:none";
+  		MMBTM;
+  		Testmode.style = "display:none";
+  		TSID;
+  		Maptest.style = "display:yes";
+  		SpawnButton1;
+  		SpawnTower.style="display:yes";
+  		SpawnButton2;
+  		SpawnEnemy.style="display:yes";
 	}
 
+	function Bunker(event){ //Создание башни - бункера
+		document.getElementById('Tower');
+		Tower.style="display:yes";
+		Tcount = Tcount + 1;
+		check1();
+		radius();
+	}
+
+	function EnemyAtt(event){ //Создание врага
+		document.getElementById('Enemy');
+		Enemy.style="display:yes";
+	}
+
+	function check1(){ //Просто проверка
+	if(Tcount > 0){
+		console.log(Enemy.style.display);
+		console.log(Div22.style);
+		enemymovement();
+		}
+	}
+
+	function attack(){ //Если враг войдет в радиус атаки, то он будет атакован
+		if(alert == true){
+			document.getElementById('ShotID');
+			Shot.style="display:yes";
+
+		}
+	}
+
+	function radius(){ //Проверяет на наличие врагов внутри радиуса
+		if(Tcount > 0){
+			ShotID.style = Div22.style;
+		}
+	}
+
+	function enemymovement(){ //Передвижение врага
+		if(Enemy.style.display === ""){
+			console.log("Ha-ha classic")
+
+		}
+
+	}
+
+var alert = false;
+
+var MainID = document.getElementById('MainMenu');
+var MMBTM = document.getElementById('TestMode');
+var TSID = document.getElementById('Maptest');
+var SpawnButton1 = document.getElementById('SpawnTower');
+var SpawnButton2 = document.getElementById('SpawnEnemy');
+
 var x = 0;
-var TitleX = document.getElementById('Title');
+var Tcount = 0;
+var Ecount = 0;
+var TitleX = document.getElementById('Title'); //Стартовый экран
 document.write(TitleT());
 
 	function TitleT(){
@@ -27,7 +120,7 @@ document.write(TitleT());
 
 function TitleP(){
 		if(x < 0){
-			clearInterval(TitleIdle);
+			clearInterval();
 		}
 		TitleX;
 		x++;
@@ -39,7 +132,7 @@ function TitleP(){
 }
 </script>
 
-<div><br>
+<div>
 	<script src="Core.js">
 	</script>
 </div>
