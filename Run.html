@@ -1,0 +1,46 @@
+<html>
+<title>
+	TD v0.01
+</title>
+
+	<h1><p align = "center">Tower Defense</p></h1><br>
+	
+	<div onmousedown="Start(event)">
+		<img id="Title" src="Title-x.jpg"><br>
+	</div>
+
+	<script> //Title
+	function Start(event) {
+  	x = -1;
+  	TitleX;
+  	Title.style = "display:none"
+	}
+
+var x = 0;
+var TitleX = document.getElementById('Title');
+document.write(TitleT());
+
+	function TitleT(){
+	Title.src = 'Title-' + x + '.jpg';
+	var TitleIdle = setInterval(TitleP, 1000);
+}
+
+function TitleP(){
+		if(x < 0){
+			clearInterval(TitleIdle);
+		}
+		TitleX;
+		x++;
+		Title.src = 'Title-' + x + '.jpg';
+		if(x > 1){
+			x = 0;
+			Title.src = 'Title-' + x + '.jpg';
+		}
+}
+</script>
+
+<div><br>
+	<script src="Core.js">
+	</script>
+</div>
+
