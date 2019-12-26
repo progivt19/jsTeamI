@@ -1,6 +1,6 @@
 <html>
 <title>
-	TD v0.01
+	TD v0.03
 </title>
 
 	<h1><p align = "center">Tower Defense</p></h1>
@@ -22,10 +22,10 @@
 		<img id="SpawnTower" src="SpawnTower.jpg" style="display: none;" onmousedown="Bunker(event)">
 		<img id="SpawnEnemy" src="SpawnEnemy.jpg" style="display: none;" onmousedown="EnemyAtt(event)">
 	</div>
-	<div id='Div22' style="position:relative; z-index:6;top:-625;left:600">
+	<div id='Div22' style="position:relative; z-index:6;top:-625;left:600;">
 		<img id="Tower" src="Bunker-1.jpg" style="display: none;">
 	</div>
-	<div style="position:relative; z-index:6;top:-620;left: 1250">
+	<div id="EnemyID" style="position:relative; z-index:6;">
 		<img id="Enemy" src="Enemy.jpg" style="display: none;">
 	</div>
 	<div id="ShotID" style="position:relative; z-index:6;">
@@ -54,26 +54,29 @@
   		SpawnTower.style="display:yes";
   		SpawnButton2;
   		SpawnEnemy.style="display:yes";
+  		setInterval(attack,1000);
+  		setInterval(radius,1000);
+  		coordinate();
 	}
 
 	function Bunker(event){ //Создание башни - бункера
 		document.getElementById('Tower');
 		Tower.style="display:yes";
 		Tcount = Tcount + 1;
-		check1();
-		radius();
+		BulletSet();
+		radiusset();
 	}
 
 	function EnemyAtt(event){ //Создание врага
 		document.getElementById('Enemy');
 		Enemy.style="display:yes";
+		setInterval(enemymovement, 1000);
 	}
 
 	function check1(){ //Просто проверка
 	if(Tcount > 0){
 		console.log(Enemy.style.display);
 		console.log(Div22.style);
-		enemymovement();
 		}
 	}
 
@@ -85,18 +88,69 @@
 		}
 	}
 
-	function radius(){ //Проверяет на наличие врагов внутри радиуса
+	var radiusW;var radiusS;var radiusN;var radiusE;
+
+	function radiusset(){ //Установка радиуса башни
+		radiusW = Towercoorli - 150;
+		radiusE = Towercoorli + 150;
+		radiusN = Towercoorti - 150;
+		radiusS = Towercoorti + 150;
+	}
+
+	function radius(){  //Проверяет на наличие врагов внутри радиуса
+		if((Enemycoorli < radiusE) && (Enemycoorli > radiusW) && (Enemycoorti < radiusS) && (Enemycoorti > radiusN)){
+			alert = true;
+		}else{ alert = false}
+	}
+
+	function BulletSet(){ //Установка начальных координат пули
 		if(Tcount > 0){
-			ShotID.style = Div22.style;
+			ShotID.style.left = Div22.style.left;
+			ShotID.style.top = Div22.style.top;
 		}
 	}
 
 	function enemymovement(){ //Передвижение врага
-		if(Enemy.style.display === ""){
-			console.log("Ha-ha classic")
+		//if(Enemy.style.display === "")
+		Enemycoorli = Enemycoorli - 30;
+		Enemycoorl = Enemycoorli.toString();
+		Enemycoorl = Enemycoorl + "px";
+		EnemyID.style.left = Enemycoorl;
+		EnemyID.style.top = Enemycoort;
+		Enemy.style.display = "yes";
+		
+	}
 
+	var Towercoorl = Div22.style.left;	var Towercoorli = "";
+	var Towercoort = Div22.style.top;	var Towercoorti = "";
+	var Enemycoorl = "1250px";	var Enemycoorli = "";
+	var Enemycoort = "-620px";	var Enemycoorti = "";
+
+	function coordinate(){ //Перевод координат картинок в числовое значение
+		for(var i = 0; i < Towercoorl.length; i++){
+			if((Towercoorl.charAt(i) * 0) == 0){
+				Towercoorli = Towercoorli + Towercoorl.charAt(i);
+			} 
 		}
-
+		Towercoorli = Towercoorli * 1;
+		for(var ii = 0; ii < Towercoort.length; ii++){
+			if((Towercoort.charAt(ii) * 0) == 0){
+				Towercoorti = Towercoorti + Towercoort.charAt(ii);
+			} 
+		}
+		Towercoorti = Towercoorti * 1;
+		for(var iii = 0; iii < Enemycoorl.length; iii++){
+			if((Enemycoorl.charAt(iii) * 0) == 0){
+				Enemycoorli = Enemycoorli + Enemycoorl.charAt(iii);
+			} 
+		}
+		Enemycoorli = Enemycoorli * 1;
+		for(var iiii = 0; iiii < Enemycoort.length; iiii++){
+			if((Enemycoort.charAt(iiii) * 0) == 0){
+				Enemycoorti = Enemycoorti + Enemycoort.charAt(iiii);
+			} 
+		}
+		Enemycoorti = Enemycoorti * 1;
 	}
 
 var alert = false;
