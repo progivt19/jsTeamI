@@ -1,9 +1,9 @@
 <html>
 <title>
-	TD v0.25
+	TD v0.3
 </title>
-<body style="margin-left: 276px">
-	<h1><p style="margin-left: 600px">Tower Defense</p></h1>
+<body>
+	<h1><p>Tower Defense</p></h1>
 	<div style="position:relative; z-index:2;">
 		<img id="Title" src="assets/Menu/Title-x.jpg" onmousedown="Start(event)" >
 	</div>
@@ -17,22 +17,28 @@
 	<div style="position:relative; z-index:5;">
 	<img id="Maptest" src="assets/Map/TestMap.jpg" style="display: none;">
 	</div>
-	<div style="position:relative; z-index:6; top:-100;width: 600px">
+	<div style="position:relative; z-index:6; top:-100;width: 1100px">
 		<img id="SpawnTower" src="assets/Menu/SpawnTower.jpg" style="display: none;height: 9%" onmousedown="Bunker(event)">
 		<img id="SpawnEnemy" src="assets/Menu/SpawnEnemy.jpg" style="display: none;height: 9%" onmousedown="EnemyAtt(event)">
+		<img id="Repair" src="assets/Menu/Repair.jpg" style="display: none;height: 9%" onmousedown="repair(event)">
+		<img id="SpawnDragon" src="assets/Menu/SpawnEnemy.jpg" style="display: none;height: 9%" onmousedown="DragonAtt(event)">
 	</div>
-	<div id='Div22' style="position:relative; z-index:6;top:-625;left:600;width: 80px">
+	<div id='Div22' style="position:relative; z-index:6;top:-615;left:610;width: 80px;min-height: 100px" class="dynamic-content-wrapper">
 		<img id="Tower" src="assets/TowersBunker-1.png" style="display: none;">
 	</div>
-	<div id="EnemyID" style="position:relative; z-index:6;width: 80px">
+	<div id="EnemyID" style="position:relative; z-index:6;width: 80px;min-height: 100px" class="dynamic-content-wrapper">
 		<img id="Enemy" src="assets/Enemy/Enemy.jpg" style="display: none;">
+	</div>
+	<div id="DragonID" style="position:relative; z-index:6;width: 90px;min-height: 100px" class="dynamic-content-wrapper">
+		<img id="Dragon" src="assets/Enemy/Dragon-dg.jpg" style="display: none;">
 	</div>
 	<div id="ShotID" style="position:relative; z-index:7;width: 10px;height: 10px">
 		<img id="Shot" src="assets/Misc/Bullet.jpg" style="display: none;">
 	</div>
-	<div id="CoinID" style="position:relative; z-index:7;top:-150; left: 1000;;width: 40px;">
+	<div id="CoinID" style="position:relative; z-index:7;top:-350; left: 1000;;width: 90px;min-height: 100px;font-size: 22" class="dynamic-content-wrapper">
 	</div>
-	<div id="HealthID" style="position:relative;z-index:7;top: -900;left: 200;width: 81px;">
+	<div id="HealthID" style="position:relative;z-index:7;top: -1000;left: 50;width: 81px;min-height: 100px" class="dynamic-content-wrapper">
+		<t id='Healthtxt' style="display: none">Castle HP:</t>
 		<img id="Health" src="assets/Misc/Health-alarm.png" style="display: none;">
 	</div>
 	<audio id="firesoundID" src="assets/Sound/Bunker-sound.ogg"></audio>
@@ -61,13 +67,18 @@
   		SpawnTower.style.display='';
   		SpawnButton2;
   		SpawnEnemy.style.display='';
+  		document.getElementById("Repair");
+  		Repair.style.display="";
+  		document.getElementById("SpawnDragon");
+  		SpawnDragon.style.display="";
   		setInterval(attack,250);
   		setInterval(radius,500);
   		setInterval(coincheck, 1000);
   		document.getElementById("Health");
   		Health.style.display="";
-  		setInterval(sabotage, 2000);
-  		coordinate();
+  		document.getElementById("Healthtxt");
+  		Healthtxt.style.display="";
+  		towercoordinate();
 	}
 
 	function Bunker(event){ //Создание башни - бункера
@@ -82,11 +93,13 @@
 	}
 
 	var enemymovementloop;
+	var dragonmovementloop;
+	var dg = 0;
 	function EnemyAtt(event){ //Создание врага
 		if(Ecount == 0){
 		Enemycoorli = "";
 		Enemycoorti = "";
-		coordinate();
+		enemycoordinate();
 		EnemyID.style.left = EnemySpawnl;
 		EnemyID.style.top = EnemySpawnt;
 		document.getElementById('Enemy');
@@ -94,81 +107,53 @@
 		enemymovementloop = setInterval(enemymovement, 250);
 		HP = 100;
 		Ecount++;
+		}
 	}
+
+var Dcount = 0;
+var DragonHP = 100;
+
+	function DragonAtt(event){ //Создание врага
+		if(Dcount == 0){
+		dragoncoorl="1250px";
+		Dragoncoort =" -700px";
+		dragoncoorli = "";
+		dragoncoorti = "";
+		dragoncoordinate();
+		DragonID.style.left = EnemySpawnl;
+		DragonID.style.top = EnemySpawnt;
+		document.getElementById('Dragon');
+		Dragon.src="assets/Enemy/Dragon-" + dg +".jpg";
+		Dragon.style.display='';
+		dragonmovementloop = setInterval(dragonmovement, 250);
+		DragonHP = 100;
+		Dcount++;
+		}
 	}
 
 	var CC;
-	var CCC;
-	var ro='';
-	var ro1="";
+
 	function coincheck(){ //Просто проверка
 		CC=document.getElementById("CoinID");
-		CC.innerHTML=Coin;
-		if(Tower.style.display === "" && ro !== true){
-			CC;
-			CCC=CoinID.style.top;
-			for(var CaC = 0; CaC < CCC.length; CaC++){
-				if((CCC.charAt(CaC)*0)==0){
-					ro=ro+CCC.charAt(CaC);
-				}
-			}
-			if(CCC.charAt(0) == "-"){
-				ro="-" + ro;
-			}
-			CCC=ro;
-			CCC=CCC*1;
-			CCC=CCC-74;
-			CoinID.style.top = CCC.toString() + "px";
-			ro = true;
-		}
-		if(Enemy.style.display === ""){
-			CC;
-			CCC=CoinID.style.top;
-			for(var CaC = 0; CaC < CCC.length; CaC++){
-				if((CCC.charAt(CaC)*0)==0){
-					ro1=ro1+CCC.charAt(CaC);
-				}
-			}
-			if(CCC.charAt(0) == "-"){
-				ro1="-" + ro1;
-			}
-			CCC=ro1;
-			CCC=CCC*1;
-			CCC=CCC-64;
-			CoinID.style.top = CCC.toString() + "px";
-		}
-		if(Enemy.style.display === "none" && Kcount > 0){
-			CC;
-			CCC=CoinID.style.top;
-			for(var CaC = 0; CaC < CCC.length; CaC++){
-				if((CCC.charAt(CaC)*0)==0){
-					ro1=ro1+CCC.charAt(CaC);
-				}
-			}
-			if(CCC.charAt(0) == "-"){
-				ro1="-" + ro1;
-			}
-			CCC=ro1;
-			CCC=CCC*1;
-			CCC=CCC+192;
-			CoinID.style.top = CCC.toString() + "px";
-		}
+		CC.innerHTML=Coin + " coins";
 	}
 
 	var HP = 100;
-	
 
 	var BA;
-	var BAB;
 	var BAC;
 	var BAA = false;
-var fireanim;var fireanimac = false;
+	var fireanim;var fireanimac = false;
 	function attack(){ //Если враг войдет в радиус атаки, то он будет атакован
 		if(alertt == true){
-			
 			document.getElementById('Shot');
 			Shot.style.display='';
+			if(enemyalert == true){
 			HP = HP - 10;
+			}
+			if(dragonalert == true){
+			DragonHP -= 20;
+			}
 			if(BAA == false){
 				BA = setInterval(BulletAnim, 250);
 				//BAB = setInterval(BulletAnimB, 90);
@@ -204,10 +189,31 @@ var fireanim;var fireanimac = false;
 		radiusS = Towercoorti + 150;
 	}
 
+var enemyalert = false;
+var dragonalert = false;
+
 	function radius(){  //Проверяет на наличие врагов внутри радиуса
-		if((Enemycoorli < radiusE) && (Enemycoorli > radiusW) && (Enemycoorti < radiusS) && (Enemycoorti > radiusN)){
+		if((Enemycoorli <= radiusE) && (Enemycoorli >= radiusW) && (Enemycoorti <= radiusS) && (Enemycoorti >= radiusN)){
 			alertt = true;
-		}else{ alertt = false;}
+			enemyalert = true;
+		}
+		if(Dragoncoorli <= radiusE){
+			alertt = true;
+			dragonalert = true;
+		}
+		if(HP < 1 && Dcount == 0){
+			alertt = false;
+			enemyalert = false;
+		}
+		if(HP<1 && DragonHP < 1){
+			alertt = false;
+			enemyalert = false;
+			dragonalert = false;
+		}
+		if(DragonHP<1 && Ecount == 0){
+			alertt = false;
+			dragonalert = false;
+		}
 	}
 
 	var Shotl =''; var Shott=''; var Shotlb; var Shottb;
@@ -258,12 +264,49 @@ var fireanim;var fireanimac = false;
 			Kcount++;
 			fire1 = 1;
 		}
-		if(Enemycoorli <= 99){
+		if(Enemycoorli <= 50){
 			Enemy.style.display = "none";
 			clearInterval(enemymovementloop);
 			EnemyID.style.left = EnemySpawnl;
 			EnemyID.style.top = EnemySpawnt;
 			Ecount--;
+			sabotage();
+		}
+		
+	}
+
+	function dragonmovement(){ //Передвижение врага
+		//if(Enemy.style.display === "")
+		Dragoncoorli = Dragoncoorli - 45;
+		Dragoncoorl = Dragoncoorli.toString();
+		Dragoncoorl = Dragoncoorl + "px";
+		DragonID.style.left = Dragoncoorl;
+		DragonID.style.top = Dragoncoort;
+		dg++;
+		document.getElementById("Dragon");
+		Dragon.src="assets/Enemy/Dragon-"+dg+".jpg";
+		if(dg > 2){
+			dg = 0;
+			document.getElementById("Dragon");
+			Dragon.src="assets/Enemy/Dragon-"+dg+".jpg";
+		}
+		if((DragonHP == 0 || DragonHP < 0)&& Dcount > 0){
+			Dragon.style.display = "none";
+			clearInterval(dragonmovementloop);
+			DragonID.style.left = EnemySpawnl;
+			DragonID.style.top = EnemySpawnt;
+			Coin = Coin + 50;
+			Dcount--;
+			Kcount++;
+			fire1 = 1;
+		}
+		if(Dragoncoorli <= 50){
+			Dragon.style.display = "none";
+			clearInterval(dragonmovementloop);
+			DragonID.style.left = EnemySpawnl;
+			DragonID.style.top = EnemySpawnt;
+			Dcount--;
+			sabotage();
 		}
 		
 	}
@@ -275,35 +318,30 @@ var fireanim;var fireanimac = false;
 	function sabotage(){
 		document.getElementById('Health');
 		Health.src = "assets/Misc/Health-" + alarm + ".png";
-		if(Enemycoorli <= 100){
+		if(Enemycoorli <= 100 || Dragoncoorli <= 100){
 			alarm--;
 			document.getElementById('Health');
 			Health.src = "assets/Misc/Health-" + alarm + ".png";
 			if(alarm == 0 || alarm < 0){
 				alert("Крепость уничтожена, вы проиграли...");
+			}
 		}
 	}
-}
+
+	function repair(){
+		Coin -= 50;
+		alarm += 1;
+		document.getElementById('Health');
+		Health.src = "assets/Misc/Health-" + alarm + ".png";
+	}
 
 	var Towercoorl = Div22.style.left;	var Towercoorli = "";
 	var Towercoort = Div22.style.top;	var Towercoorti = "";
-	var Enemycoorl = "1250px";	var Enemycoorli = "";
-	var Enemycoort = "-620px";	var Enemycoorti = "";
+	var Enemycoorl = "1250px";	var Enemycoorli = ""; var Dragoncoorl = "1250px"; var Dragoncoorli = "";
+	var Enemycoort = "-620px";	var Enemycoorti = ""; var Dragoncoort = "-700px"; var Dragoncoorti = "";
 	var EnemySpawnl = "1250px"; var EnemySpawnt = "-620px";
 
-	function coordinate(){ //Перевод координат картинок в числовое значение
-		for(var i = 0; i < Towercoorl.length; i++){
-			if((Towercoorl.charAt(i) * 0) == 0){
-				Towercoorli = Towercoorli + Towercoorl.charAt(i);
-			} 
-		}
-		Towercoorli = Towercoorli * 1;
-		for(var ii = 0; ii < Towercoort.length; ii++){
-			if((Towercoort.charAt(ii) * 0) == 0){
-				Towercoorti = Towercoorti + Towercoort.charAt(ii);
-			} 
-		}
-		Towercoorti = Towercoorti * 1;
+	function enemycoordinate(){ //Перевод координат картинок в числовое значение
 		for(var iii = 0; iii < EnemySpawnl.length; iii++){
 			if((EnemySpawnl.charAt(iii) * 0) == 0){
 				Enemycoorli = Enemycoorli + EnemySpawnl.charAt(iii);
@@ -316,6 +354,36 @@ var fireanim;var fireanimac = false;
 			} 
 		}
 		Enemycoorti = Enemycoorti * 1;
+	}
+
+	function dragoncoordinate(){ //Перевод координат картинок в числовое значение
+		for(var di = 0; di < EnemySpawnl.length; di++){
+			if((EnemySpawnl.charAt(di) * 0) == 0){
+				Dragoncoorli = Dragoncoorli + EnemySpawnl.charAt(di);
+			} 
+		}
+		Dragoncoorli = Dragoncoorli * 1;
+		for(var dii = 0; di < EnemySpawnt.length; dii++){
+			if((EnemySpawnt.charAt(dii) * 0) == 0){
+				Dragoncoorti = Dragoncoorti + EnemySpawnt.charAt(dii);
+			} 
+		}
+		Dragoncoorti = Dragoncoorti * 1;
+	}
+
+	function towercoordinate(){
+		for(var i = 0; i < Towercoorl.length; i++){
+			if((Towercoorl.charAt(i) * 0) == 0){
+				Towercoorli = Towercoorli + Towercoorl.charAt(i);
+			} 
+		}
+		Towercoorli = Towercoorli * 1;
+		for(var ii = 0; ii < Towercoort.length; ii++){
+			if((Towercoort.charAt(ii) * 0) == 0){
+				Towercoorti = Towercoorti + Towercoort.charAt(ii);
+			} 
+		}
+		Towercoorti = Towercoorti * 1;
 	}
 
 var alertt = false;
@@ -370,4 +438,3 @@ function fire(){
 	}
 }
 </script>
-
