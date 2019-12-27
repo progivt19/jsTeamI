@@ -1,90 +1,197 @@
 <html>
 <title>
-	TD v0.03
+	TD v0.25
 </title>
-
-	<h1><p align = "center">Tower Defense</p></h1>
-	
-	<div >
-		<img id="Title" src="Title-x.jpg" onmousedown="Start(event)">
+<body style="margin-left: 276px">
+	<h1><p style="margin-left: 600px">Tower Defense</p></h1>
+	<div style="position:relative; z-index:2;">
+		<img id="Title" src="assets/Menu/Title-x.jpg" onmousedown="Start(event)" >
 	</div>
 
 	<div style="position:relative; z-index:3;">
-	<img id="MainMenu" src="Main-0.jpg" style="display: none;"> 
+	<img id="MainMenu" src="assets/Menu/Main-0.jpg" style="display:none;"> 
 	</div>
-	<div style="position:relative; top:-172; left:983; z-index:4" >
-	<img id="Testmode" src="MMButton-TM.jpg" style="display: none;" onmousedown="TMStart(event)">
+	<div style="position:relative; top:-172; left:983; z-index:4;width: 120px" >
+	<img id="Testmode" src="assets/Menu/MMButton-TM.jpg" style="display: none;" onmousedown="TMStart(event)">
 	</div>
 	<div style="position:relative; z-index:5;">
-	<img id="Maptest" src="TestMap.jpg" style="display: none;">
+	<img id="Maptest" src="assets/Map/TestMap.jpg" style="display: none;">
 	</div>
-	<div style="position:relative; z-index:6; top:-100">
-		<img id="SpawnTower" src="SpawnTower.jpg" style="display: none;" onmousedown="Bunker(event)">
-		<img id="SpawnEnemy" src="SpawnEnemy.jpg" style="display: none;" onmousedown="EnemyAtt(event)">
+	<div style="position:relative; z-index:6; top:-100;width: 600px">
+		<img id="SpawnTower" src="assets/Menu/SpawnTower.jpg" style="display: none;height: 9%" onmousedown="Bunker(event)">
+		<img id="SpawnEnemy" src="assets/Menu/SpawnEnemy.jpg" style="display: none;height: 9%" onmousedown="EnemyAtt(event)">
 	</div>
-	<div id='Div22' style="position:relative; z-index:6;top:-625;left:600;">
-		<img id="Tower" src="Bunker-1.jpg" style="display: none;">
+	<div id='Div22' style="position:relative; z-index:6;top:-625;left:600;width: 80px">
+		<img id="Tower" src="assets/TowersBunker-1.png" style="display: none;">
 	</div>
-	<div id="EnemyID" style="position:relative; z-index:6;">
-		<img id="Enemy" src="Enemy.jpg" style="display: none;">
+	<div id="EnemyID" style="position:relative; z-index:6;width: 80px">
+		<img id="Enemy" src="assets/Enemy/Enemy.jpg" style="display: none;">
 	</div>
-	<div id="ShotID" style="position:relative; z-index:6;">
-		<img id="Shot" src="Bullet.jpg" style="display: none;">
+	<div id="ShotID" style="position:relative; z-index:7;width: 10px;height: 10px">
+		<img id="Shot" src="assets/Misc/Bullet.jpg" style="display: none;">
 	</div>
-
+	<div id="CoinID" style="position:relative; z-index:7;top:-150; left: 1000;;width: 40px;">
+	</div>
+	<div id="HealthID" style="position:relative;z-index:7;top: -900;left: 200;width: 81px;">
+		<img id="Health" src="assets/Misc/Health-alarm.png" style="display: none;">
+	</div>
+	<audio id="firesoundID" src="assets/Sound/Bunker-sound.ogg"></audio>
+</body>
 	<script>
+		document.getElementById("firesoundID");
+		firesoundID.volume = 0.1;
 	function Start(event){ //Переход со стартового экрана в главное меню
   		x = -1;
   		TitleX;
-  		Title.style = "display:none";
+  		Title.style.display='none';
   		MainID;
-  		MainMenu.style = "display:yes";
+  		MainMenu.style.display="";
   		MMBTM;
-  		Testmode.style = "display:yes";
+  		Testmode.style.display='';
 		}
 
 	function TMStart(event){ //Переход с главного меню в тестовый уровень
 		MainID;
-  		MainMenu.style = "display:none";
+  		MainMenu.style.display='none';
   		MMBTM;
-  		Testmode.style = "display:none";
+  		Testmode.style.display='none';
   		TSID;
-  		Maptest.style = "display:yes";
+  		Maptest.style.display='';
   		SpawnButton1;
-  		SpawnTower.style="display:yes";
+  		SpawnTower.style.display='';
   		SpawnButton2;
-  		SpawnEnemy.style="display:yes";
-  		setInterval(attack,1000);
-  		setInterval(radius,1000);
+  		SpawnEnemy.style.display='';
+  		setInterval(attack,250);
+  		setInterval(radius,500);
+  		setInterval(coincheck, 1000);
+  		document.getElementById("Health");
+  		Health.style.display="";
+  		setInterval(sabotage, 2000);
   		coordinate();
 	}
 
 	function Bunker(event){ //Создание башни - бункера
+		if(Coin > 0 && ((Coin - 100) >= 0)){
 		document.getElementById('Tower');
-		Tower.style="display:yes";
+		Tower.style.display='';
 		Tcount = Tcount + 1;
+		Coin = Coin - 100;
 		BulletSet();
 		radiusset();
-	}
-
-	function EnemyAtt(event){ //Создание врага
-		document.getElementById('Enemy');
-		Enemy.style="display:yes";
-		setInterval(enemymovement, 1000);
-	}
-
-	function check1(){ //Просто проверка
-	if(Tcount > 0){
-		console.log(Enemy.style.display);
-		console.log(Div22.style);
 		}
 	}
 
-	function attack(){ //Если враг войдет в радиус атаки, то он будет атакован
-		if(alert == true){
-			document.getElementById('ShotID');
-			Shot.style="display:yes";
+	var enemymovementloop;
+	function EnemyAtt(event){ //Создание врага
+		if(Ecount == 0){
+		Enemycoorli = "";
+		Enemycoorti = "";
+		coordinate();
+		EnemyID.style.left = EnemySpawnl;
+		EnemyID.style.top = EnemySpawnt;
+		document.getElementById('Enemy');
+		Enemy.style.display='';
+		enemymovementloop = setInterval(enemymovement, 250);
+		HP = 100;
+		Ecount++;
+	}
+	}
 
+	var CC;
+	var CCC;
+	var ro='';
+	var ro1="";
+	function coincheck(){ //Просто проверка
+		CC=document.getElementById("CoinID");
+		CC.innerHTML=Coin;
+		if(Tower.style.display === "" && ro !== true){
+			CC;
+			CCC=CoinID.style.top;
+			for(var CaC = 0; CaC < CCC.length; CaC++){
+				if((CCC.charAt(CaC)*0)==0){
+					ro=ro+CCC.charAt(CaC);
+				}
+			}
+			if(CCC.charAt(0) == "-"){
+				ro="-" + ro;
+			}
+			CCC=ro;
+			CCC=CCC*1;
+			CCC=CCC-74;
+			CoinID.style.top = CCC.toString() + "px";
+			ro = true;
+		}
+		if(Enemy.style.display === ""){
+			CC;
+			CCC=CoinID.style.top;
+			for(var CaC = 0; CaC < CCC.length; CaC++){
+				if((CCC.charAt(CaC)*0)==0){
+					ro1=ro1+CCC.charAt(CaC);
+				}
+			}
+			if(CCC.charAt(0) == "-"){
+				ro1="-" + ro1;
+			}
+			CCC=ro1;
+			CCC=CCC*1;
+			CCC=CCC-64;
+			CoinID.style.top = CCC.toString() + "px";
+		}
+		if(Enemy.style.display === "none" && Kcount > 0){
+			CC;
+			CCC=CoinID.style.top;
+			for(var CaC = 0; CaC < CCC.length; CaC++){
+				if((CCC.charAt(CaC)*0)==0){
+					ro1=ro1+CCC.charAt(CaC);
+				}
+			}
+			if(CCC.charAt(0) == "-"){
+				ro1="-" + ro1;
+			}
+			CCC=ro1;
+			CCC=CCC*1;
+			CCC=CCC+192;
+			CoinID.style.top = CCC.toString() + "px";
+		}
+	}
+
+	var HP = 100;
+	
+
+	var BA;
+	var BAB;
+	var BAC;
+	var BAA = false;
+var fireanim;var fireanimac = false;
+	function attack(){ //Если враг войдет в радиус атаки, то он будет атакован
+		if(alertt == true){
+			
+			document.getElementById('Shot');
+			Shot.style.display='';
+			HP = HP - 10;
+			if(BAA == false){
+				BA = setInterval(BulletAnim, 250);
+				//BAB = setInterval(BulletAnimB, 90);
+				BAC = setInterval(BulletAnimC, 200);
+			}
+			if(fireanimac == false){
+				fireanim = setInterval(fire,200);
+				fireanimac = true;
+			}
+			BAA = true;
+		}
+		if(alertt == false){
+			document.getElementById("Tower");
+			clearInterval(fireanim);
+			fireanimac = false;
+			fire1 = 1;
+			Tower.src="assets/Towers/Bunker-" + fire1 + ".png";
+			BAA = false;
+			clearInterval(BA);
+			//clearInterval(BAB);
+			clearInterval(BAC);
+			document.getElementById('Shot');
+			Shot.style.display='none';
 		}
 	}
 
@@ -99,15 +206,39 @@
 
 	function radius(){  //Проверяет на наличие врагов внутри радиуса
 		if((Enemycoorli < radiusE) && (Enemycoorli > radiusW) && (Enemycoorti < radiusS) && (Enemycoorti > radiusN)){
-			alert = true;
-		}else{ alert = false}
+			alertt = true;
+		}else{ alertt = false;}
+	}
+
+	var Shotl =''; var Shott=''; var Shotlb; var Shottb;
+
+	function BulletAnim(){
+		ShotID.style.top = Towercoort;
+		ShotID.style.left = Towercoorl;
+	}
+
+	function BulletAnimC(){
+		ShotID.style.top = EnemyID.style.top;
+		ShotID.style.left = EnemyID.style.left;
 	}
 
 	function BulletSet(){ //Установка начальных координат пули
-		if(Tcount > 0){
-			ShotID.style.left = Div22.style.left;
-			ShotID.style.top = Div22.style.top;
+		ShotID.style.left = Div22.style.left;
+		ShotID.style.top = Div22.style.top;
+		Shotlb = ShotID.style.left;
+		Shottb = ShotID.style.top;
+		for(var B = 0; B < Shotlb.length; B++){
+			if((Shotlb.charAt(B) * 0) == 0){
+				Shotl = Shotl + Shotlb.charAt(B);
+			} 
 		}
+		Shotl = Shotl * 1;
+		for(var BB = 0; BB < Shottb.length; BB++){
+			if((Shottb.charAt(BB) * 0) == 0){
+				Shott = Shott + Shottb.charAt(BB);
+			} 
+		}
+		Shott = Shott * 1;
 	}
 
 	function enemymovement(){ //Передвижение врага
@@ -117,14 +248,48 @@
 		Enemycoorl = Enemycoorl + "px";
 		EnemyID.style.left = Enemycoorl;
 		EnemyID.style.top = Enemycoort;
-		Enemy.style.display = "yes";
+		if((HP == 0 || HP < 0)&& Ecount > 0){
+			Enemy.style.display = "none";
+			clearInterval(enemymovementloop);
+			EnemyID.style.left = EnemySpawnl;
+			EnemyID.style.top = EnemySpawnt;
+			Coin = Coin + 50;
+			Ecount--;
+			Kcount++;
+			fire1 = 1;
+		}
+		if(Enemycoorli <= 99){
+			Enemy.style.display = "none";
+			clearInterval(enemymovementloop);
+			EnemyID.style.left = EnemySpawnl;
+			EnemyID.style.top = EnemySpawnt;
+			Ecount--;
+		}
 		
 	}
+
+	var alarm = 3;
+	document.getElementById('Health');
+	Health.src = "assets/Misc/Health-" + alarm + ".png";
+
+	function sabotage(){
+		document.getElementById('Health');
+		Health.src = "assets/Misc/Health-" + alarm + ".png";
+		if(Enemycoorli <= 100){
+			alarm--;
+			document.getElementById('Health');
+			Health.src = "assets/Misc/Health-" + alarm + ".png";
+			if(alarm == 0 || alarm < 0){
+				alert("Крепость уничтожена, вы проиграли...");
+		}
+	}
+}
 
 	var Towercoorl = Div22.style.left;	var Towercoorli = "";
 	var Towercoort = Div22.style.top;	var Towercoorti = "";
 	var Enemycoorl = "1250px";	var Enemycoorli = "";
 	var Enemycoort = "-620px";	var Enemycoorti = "";
+	var EnemySpawnl = "1250px"; var EnemySpawnt = "-620px";
 
 	function coordinate(){ //Перевод координат картинок в числовое значение
 		for(var i = 0; i < Towercoorl.length; i++){
@@ -139,21 +304,21 @@
 			} 
 		}
 		Towercoorti = Towercoorti * 1;
-		for(var iii = 0; iii < Enemycoorl.length; iii++){
-			if((Enemycoorl.charAt(iii) * 0) == 0){
-				Enemycoorli = Enemycoorli + Enemycoorl.charAt(iii);
+		for(var iii = 0; iii < EnemySpawnl.length; iii++){
+			if((EnemySpawnl.charAt(iii) * 0) == 0){
+				Enemycoorli = Enemycoorli + EnemySpawnl.charAt(iii);
 			} 
 		}
 		Enemycoorli = Enemycoorli * 1;
-		for(var iiii = 0; iiii < Enemycoort.length; iiii++){
-			if((Enemycoort.charAt(iiii) * 0) == 0){
-				Enemycoorti = Enemycoorti + Enemycoort.charAt(iiii);
+		for(var iiii = 0; iiii < EnemySpawnt.length; iiii++){
+			if((EnemySpawnt.charAt(iiii) * 0) == 0){
+				Enemycoorti = Enemycoorti + EnemySpawnt.charAt(iiii);
 			} 
 		}
 		Enemycoorti = Enemycoorti * 1;
 	}
 
-var alert = false;
+var alertt = false;
 
 var MainID = document.getElementById('MainMenu');
 var MMBTM = document.getElementById('TestMode');
@@ -162,13 +327,16 @@ var SpawnButton1 = document.getElementById('SpawnTower');
 var SpawnButton2 = document.getElementById('SpawnEnemy');
 
 var x = 0;
+var fire1=1;
 var Tcount = 0;
 var Ecount = 0;
+var Kcount = 0;
+var Coin = 100;
 var TitleX = document.getElementById('Title'); //Стартовый экран
 document.write(TitleT());
 
 	function TitleT(){
-	Title.src = 'Title-' + x + '.jpg';
+	Title.src = 'assets/Menu/Title-' + x + '.jpg';
 	var TitleIdle = setInterval(TitleP, 1000);
 }
 
@@ -178,16 +346,28 @@ function TitleP(){
 		}
 		TitleX;
 		x++;
-		Title.src = 'Title-' + x + '.jpg';
+		Title.src = 'assets/Menu/Title-' + x + '.jpg';
 		if(x > 1){
 			x = 0;
-			Title.src = 'Title-' + x + '.jpg';
+			Title.src = 'assets/Menu/Title-' + x + '.jpg';
 		}
 }
-</script>
 
-<div>
-	<script src="Core.js">
-	</script>
-</div>
+function fire(){
+	document.getElementById("firesoundID");
+	firesoundID.play();
+	document.getElementById("Tower");
+	fire1++;
+	Tower.src="assets/Towers/Bunker-" + fire1 + ".png";
+	if(fire1 > 4){
+		fire1 = 2;
+		Tower.src="assets/Towers/Bunker-" + fire1 + ".png";
+	}
+	if(fireanimac == false){
+		Tower.src="assets/Towers/Bunker-" + fire1 + ".png";
+		clearInterval(fireanim);
+		fire1 = 1;
+	}
+}
+</script>
 
